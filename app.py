@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, redirect
+
 import mysql.connector
 from config import DB_CONFIG
 
