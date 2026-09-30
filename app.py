@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, redirect
+from flask import Flask, render_template, request, redirect, flash
 
 import mysql.connector
 from config import DB_CONFIG
 
 
 app = Flask(__name__)
+app.secret_key = "biblioteca_escolar"
+
 
 
 def conectar():
@@ -72,12 +74,15 @@ def cadastrar_aluno():
         cursor.close()
         conexao.close()
 
-
+        flash("Aluno cadastrado com sucesso!", "sucesso")
         return redirect("/alunos")
 
 
     except Exception as erro:
-        return f"Erro ao cadastrar aluno: {erro}"
+         flash(f"Erro ao cadastrar aluno: {erro}", "erro")
+         return redirect("/alunos")
+
+
 ## Rota CRUD aluno
 @app.route("/alunos/editar/<int:id_aluno>")
 def editar_aluno(id_aluno):
@@ -141,12 +146,15 @@ def atualizar_aluno(id_aluno):
         cursor.close()
         conexao.close()
 
-
+        flash("Aluno atualizado com sucesso!", "sucesso")
         return redirect("/alunos")
 
 
     except Exception as erro:
-        return f"Erro ao atualizar aluno: {erro}"
+       
+        flash(f"Erro ao atualizar aluno: {erro}", "erro")
+        return redirect("/alunos")
+
 
 
 
@@ -170,12 +178,14 @@ def excluir_aluno(id_aluno):
         cursor.close()
         conexao.close()
 
-
+        flash("Aluno excluído com sucesso!", "sucesso")
         return redirect("/alunos")
 
 
     except Exception as erro:
-        return f"Erro ao excluir aluno: {erro}"
+         flash("Não foi possível excluir o aluno. Verifique se ele possui empréstimos cadastrados.", "erro")
+         return redirect("/alunos")
+
 
 
 
@@ -236,8 +246,10 @@ def cadastrar_livro():
         cursor.close()
         conexao.close()
 
-
+        flash("Livro cadastrado com sucesso!", "sucesso")
+        flash("Não foi possível excluir o livro. Verifique se ele possui empréstimos cadastrados.", "erro")
         return redirect("/livros")
+
 
 
     except Exception as erro:
@@ -304,12 +316,14 @@ def atualizar_livro(id_livro):
         cursor.close()
         conexao.close()
 
-
+        flash("Livro atualizado com sucesso!", "sucesso")
+        
         return redirect("/livros")
 
 
+
     except Exception as erro:
-        return f"Erro ao atualizar livro: {erro}"
+        flash("Não foi possível atualizar o livro. Verifique se ele possui empréstimos cadastrados.", "erro")
 
 
 
@@ -333,12 +347,13 @@ def excluir_livro(id_livro):
         cursor.close()
         conexao.close()
 
-
+        flash("Livro excluído com sucesso!", "sucesso")
         return redirect("/livros")
 
 
+
     except Exception as erro:
-        return f"Erro ao excluir livro: {erro}"
+        flash("Não foi possível excluir o livro. Verifique se ele possui empréstimos cadastrados.", "erro")
 
 # Rotas para biliotecario
 @app.route("/bibliotecarios")
@@ -399,12 +414,13 @@ def cadastrar_bibliotecario():
         cursor.close()
         conexao.close()
 
+        flash("Bibliotecário cadastrado com sucesso!", "sucesso")
+        return redirect("/alunos")
 
-        return redirect("/bibliotecarios")
 
 
     except Exception as erro:
-        return f"Erro ao cadastrar bibliotecário: {erro}"
+        flash("Não foi possível cadastrar o Bibliotecário. Verifique se ele possui empréstimos cadastrados.", "erro")
 
 @app.route("/bibliotecarios/editar/<int:id_bibliotecario>")
 def editar_bibliotecario(id_bibliotecario):
@@ -467,12 +483,14 @@ def atualizar_bibliotecario(id_bibliotecario):
         cursor.close()
         conexao.close()
 
-
+        flash("bibliotecario atualizado com sucesso!", "sucesso")
         return redirect("/bibliotecarios")
 
 
     except Exception as erro:
-        return f"Erro ao atualizar bibliotecário: {erro}"
+        flash("Não foi possível atualizar o bibliotecario. Verifique se ele possui empréstimos cadastrados.", "erro")
+        return redirect("/bibliotecarios")
+
 
 
 
@@ -496,12 +514,12 @@ def excluir_bibliotecario(id_bibliotecario):
         cursor.close()
         conexao.close()
 
-
+        flash("Bibliotecário excluído com sucesso!", "sucesso")
         return redirect("/bibliotecarios")
 
 
     except Exception as erro:
-        return f"Erro ao excluir bibliotecário: {erro}"
+       flash("Não foi possível excluir o bibliotecário. Verifique se ele possui empréstimos cadastrados.", "erro")
 
 # Rotas para empréstimos
 @app.route("/emprestimos")
